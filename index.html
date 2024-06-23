@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          container: {
+            center: true,
+            padding: {
+              DEFAULT: "2rem",
+              xl: "4rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Comic Sans MS", "Comic Sans", cursive;
+        background-image: url("asf5es-669996229.png");
+      }
+    </style>
+    <title>coucou cassouille</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app" class="flex items-center justify-center pt-16">
+      <div
+        class="flex flex-col bg-slate-500/80 rounded-lg p-8 space-y-4 max-w-screen-lg"
+      >
+        <h1 class="text-2xl text-black">
+          <p class="font-bold">Bonjour Cassandre.</p>
+          <p>
+            Vous avez voyage dans mon cul, maintenant il est l'heure de faire un
+            tour dans mon coeur.
+          </p>
+          <p>Pas si vite !</p>
+          <p>
+            Saurez-vous resoudre l'enigme qui dechiffrera la clef de mon coeur ?
+          </p>
+        </h1>
+        <h1 class="text-2xl text-black">
+          <p class="underline font-bold">Consignes</p>
+          <p>
+            Le texte a ete melange par le malefique
+            <span class="italic">Mooseblood</span>.
+          </p>
+          <p>Trouve la combinaison et dechiffre le message cache !</p>
+        </h1>
+        <div class="flex flex-col items-center justify-center space-y-2">
+          <div class="flex flex-row items-center justify-center">
+            <label for="choose-selectedLetter" class="mr-2"></label>
+            <select
+              id="choose-selectedLetter"
+              v-model="selectedLetter"
+              @change="updateCipheredText"
+            >
+              <option v-for="char in alphabet" :key="char" :value="char">
+                {{ char }}
+              </option>
+            </select>
+          </div>
+          <p class="text-xl">{{ cipheredText }}</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref, computed } = Vue;
+
+      createApp({
+        setup() {
+          const text = ref(`
+          Ma belle et bien aimee Cassandre. Bienvenue sur mon blog 2006. Je te pris de bien vouloir prendre ces quelques mots qui expriment ma pensee. J'ai la flemme d'attendre mardi pour te dire tout ca, on en rediscutera tranquillement, mais j'aime bien quand c'est ecrit comme ca il y a rien qui est oublie :P Debut : "J'ai l'impression de te rendre triste. Ca me rend triste de repenser a toi qui pleure. Les pleurs et la tristesse c'est deux choses qui me font peur et que je comprends trop mal, alors quand je te vois pleurer je fais direct le lien avec la tristesse. Pour moi pleurer = tristesse = grave. Mais je sais que pour toi (et en fait tout le reste du monde parce que c'est fucking normal) tristesse/pleurs c'est pas toujours synonyme de gravite. Je crois que j'ai peur de ta tristesse parce que j'ai peur de ma tristesse. Sauf que je veux pas avoir peur de ta tristesse, je veux a tout prix que tu me la partages, la vivre avec toi, a tes cotes, avec solidarite, parce qu'on est ensemble et pas l'un contre l'autre. J'ai peur que ma peur fasse que tu n'oses plus etre triste a mes cotes, et ca me rend triste (francais 5/20 oups). Je voulais aussi en profiter pour parler rapidement de la safe place. Pour moi c'est un endroit ou je suis seul et ou j'ai l'espace de faire ce que je veux (rien faire et regarder dans le vide, bouder, ecrire). Je pense qu'on a une vision de la safe place qui differe et je veux surtout pas t'imposer la mienne, du coup je suis tout oui d'entendre ce dont tu as besoin et qu'on trouve un equilibre ! Quoi qu'il en soit, je vais faire monstre d'efforts pour te dire les choses sans sous entendus : combien de temps j'ai besoin - tout en te rassurant - en etant sincere / clair, sans etre mechant. (ps: pour ca il faudrait que j'arrete d'etre un gros frustre de la life - d'ou mon besoin de dire les choses sans sous entendus)" Je t'aime sincerement, tu me manques <3 J'ai super hate qu'on connecte et qu'on glousse comme les deux abrutis que nous sommes !!
+          `);
+          const secretLetter = ref("S");
+          const selectedLetter = ref("A");
+          const alphabet = ref("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
+
+          const cipheredText = ref("");
+
+          const updateCipheredText = () => {
+            const shift =
+              selectedLetter.value.charCodeAt(0) -
+              secretLetter.value.charCodeAt(0); // Calculate the shift based on 'A'
+            cipheredText.value = text.value
+              .split("")
+              .map((char) => {
+                if (char >= "A" && char <= "Z") {
+                  return String.fromCharCode(
+                    ((char.charCodeAt(0) - 65 + shift) % 26) + 65
+                  );
+                } else if (char >= "a" && char <= "z") {
+                  return String.fromCharCode(
+                    ((char.charCodeAt(0) - 97 + shift) % 26) + 97
+                  );
+                } else {
+                  return char;
+                }
+              })
+              .join("");
+          };
+
+          // Initialize ciphered text
+          updateCipheredText();
+
+          return {
+            text,
+            selectedLetter,
+            alphabet,
+            cipheredText,
+            updateCipheredText,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
